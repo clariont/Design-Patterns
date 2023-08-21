@@ -18,11 +18,8 @@ class Beverage(ABC):
  
 class Condiment(Beverage):
 
-    #def __init__(self, wrappedBeverage):
-    #    self.wrappedBeverage = wrappedBeverage
-    #    print ("Condiment mro", self.wrappedBeverage.mro())
-    #    super().__init__()
-    def __init__(self):
+    def __init__(self, wrappedBeverage):
+        self.wrappedBeverage = wrappedBeverage
         super().__init__()
     
     @abstractmethod
@@ -37,7 +34,6 @@ class DripCoffee(Beverage):
     def __init__(self):
         self.description = "Drip Coffee"
         self.cost = 3.0
-        print ("in DripCoffee constructor, self.cost", self.cost)
         super().__init__()
 
     def get_description(self):
@@ -46,35 +42,70 @@ class DripCoffee(Beverage):
     def get_cost(self):    
         return self.cost
 
-class Milk(Condiment):
-    def __init__(self, wrappedBeverage):
-        self.wrappedBeverage = wrappedBeverage
-        self.description = "Milk"
-        self.cost = 0.5
-        print ("mro", self.wrappedBeverage.mro())
-        print ("cost", wrappedBeverage.get_cost())
+
+class Espresso(Beverage):
+    def __init__(self):
+        self.description = "Espresso"
+        self.cost = 2.5
         super().__init__()
 
     def get_description(self):
-        temp = self.wrappedBeverage
-        return temp.get_description() + ", " + self.description
-        #return self.wrappedBeverage.get_description() + ", " + self.description
+        return self.description
 
     def get_cost(self):    
-        return self.cost + self.wrappedBeverage.get_cost()
-        #return self.cost + self.wrappedBeverage.cost
+        return self.cost
+
+
+class WholeMilk(Condiment):
+    def __init__(self, wrappedBeverage):
+        self.wrappedBeverage = wrappedBeverage
+        self.description = "WholeMilk"
+        self.cost = 0.25
+        super().__init__(self.wrappedBeverage)
+
+    def get_description(self):
+        return self.wrappedBeverage.get_description() + ", " + self.description
+
+    def get_cost(self):    
+        return self.wrappedBeverage.get_cost() + self.cost
+
+class Vanilla(Condiment):
+    def __init__(self, wrappedBeverage):
+        self.wrappedBeverage = wrappedBeverage
+        self.description = "Vanilla"
+        self.cost = 0.5
+        super().__init__(self.wrappedBeverage)
+
+    def get_description(self):
+        return self.wrappedBeverage.get_description() + ", " + self.description
+
+    def get_cost(self):    
+        return self.wrappedBeverage.get_cost() + self.cost
+
+
+class OatMilk(Condiment):
+    def __init__(self, wrappedBeverage):
+        self.wrappedBeverage = wrappedBeverage
+        self.description = "OatMilk"
+        self.cost = 1.0
+        super().__init__(self.wrappedBeverage)
+
+    def get_description(self):
+        return self.wrappedBeverage.get_description() + ", " + self.description
+
+    def get_cost(self):    
+        return self.wrappedBeverage.get_cost() + self.cost
+
+def printBeverage(beverage):
+    print ("Your order is ", beverage.get_description(), " and the cost is: ", beverage.get_cost())
 
 
 def main():
     print("Hello World!")
 
-    coffee = DripCoffee()
-    print ("coffee.get_cost(): ", coffee.get_cost())
-    print (type(coffee))
-
-    coffeemilk = Milk(DripCoffee)
-    print(coffeemilk.get_description())
-    print(coffeemilk.get_cost())
+    coffeemilk = WholeMilk(DripCoffee())
+    printBeverage(coffeemilk)
+    printBeverage(Vanilla(OatMilk(Espresso())))
 
 if __name__ == "__main__":
     main()
